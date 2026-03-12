@@ -3,7 +3,7 @@ services:
     name: mobipartner-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile.prod
-    dockerContext: ./backend
+    dockerContext: .
     plan: free
     healthCheckPath: /health
     envVars:
