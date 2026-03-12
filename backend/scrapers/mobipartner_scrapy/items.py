@@ -1,0 +1,28 @@
+import scrapy
+
+
+class PropertyItem(scrapy.Item):
+    source = scrapy.Field()
+    source_id = scrapy.Field()
+    source_url = scrapy.Field()
+    title = scrapy.Field()
+    address = scrapy.Field()
+    price = scrapy.Field()
+    currency = scrapy.Field()
+    property_type = scrapy.Field()
+    listing_type = scrapy.Field()
+    total_area_m2 = scrapy.Field()
+    covered_area_m2 = scrapy.Field()
+    rooms = scrapy.Field()
+    bedrooms = scrapy.Field()
+    bathrooms = scrapy.Field()
+    garages = scrapy.Field()
+    age_years = scrapy.Field()
+    floor_number = scrapy.Field()
+    expenses_ars = scrapy.Field()
+    description = scrapy.Field()
+    image_urls = scrapy.Field()
+    raw_data = scrapy.Field()
+    latitude = scrapy.Field()
+    longitude = scrapy.Field()
+    apto_credito = scrapy.Field()

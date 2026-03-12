@@ -1,0 +1,389 @@
+[
+  {
+    "location_name": "Centro",
+    "level": "barrio",
+    "safety_score": 35,
+    "quality_score": 70,
+    "overall_zone_score": 52,
+    "source": "snic_observatorio_2024",
+    "notes": "Alta densidad, mucho delito contra propiedad. Buena infraestructura."
+  },
+  {
+    "location_name": "Barrio Norte",
+    "level": "barrio",
+    "safety_score": 55,
+    "quality_score": 72,
+    "overall_zone_score": 64,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona residencial media-alta, mejor que centro en seguridad."
+  },
+  {
+    "location_name": "Barrio Sur",
+    "level": "barrio",
+    "safety_score": 30,
+    "quality_score": 38,
+    "overall_zone_score": 34,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona vulnerable, alta incidencia delictiva."
+  },
+  {
+    "location_name": "Parque 9 de Julio",
+    "level": "barrio",
+    "safety_score": 50,
+    "quality_score": 75,
+    "overall_zone_score": 62,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona parque, buena calidad pero robos nocturnos."
+  },
+  {
+    "location_name": "Barrio Jardín",
+    "level": "barrio",
+    "safety_score": 52,
+    "quality_score": 60,
+    "overall_zone_score": 56,
+    "source": "snic_observatorio_2024",
+    "notes": "Residencial, seguridad media."
+  },
+  {
+    "location_name": "Villa Luján",
+    "level": "barrio",
+    "safety_score": 32,
+    "quality_score": 35,
+    "overall_zone_score": 34,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona vulnerable, alta conflictividad."
+  },
+  {
+    "location_name": "Ciudadela",
+    "level": "barrio",
+    "safety_score": 45,
+    "quality_score": 50,
+    "overall_zone_score": 48,
+    "source": "snic_observatorio_2024",
+    "notes": "Mixto comercial/residencial."
+  },
+  {
+    "location_name": "Villa Urquiza",
+    "level": "barrio",
+    "safety_score": 38,
+    "quality_score": 42,
+    "overall_zone_score": 40,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona popular, inseguridad media-alta."
+  },
+  {
+    "location_name": "Barrio Belgrano",
+    "level": "barrio",
+    "safety_score": 48,
+    "quality_score": 55,
+    "overall_zone_score": 52,
+    "source": "snic_observatorio_2024",
+    "notes": "Residencial clase media."
+  },
+  {
+    "location_name": "Las Talitas",
+    "level": "barrio",
+    "safety_score": 25,
+    "quality_score": 28,
+    "overall_zone_score": 26,
+    "source": "snic_observatorio_2024",
+    "notes": "Alta conflictividad, periferia norte."
+  },
+  {
+    "location_name": "Villa Alem",
+    "level": "barrio",
+    "safety_score": 30,
+    "quality_score": 32,
+    "overall_zone_score": 31,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona periférica vulnerable."
+  },
+  {
+    "location_name": "Barrio Independencia",
+    "level": "barrio",
+    "safety_score": 40,
+    "quality_score": 45,
+    "overall_zone_score": 42,
+    "source": "snic_observatorio_2024",
+    "notes": "Residencial, seguridad media."
+  },
+  {
+    "location_name": "Barrio Oeste",
+    "level": "barrio",
+    "safety_score": 42,
+    "quality_score": 48,
+    "overall_zone_score": 45,
+    "source": "snic_observatorio_2024",
+    "notes": "Mixto, zona en crecimiento."
+  },
+  {
+    "location_name": "Villa 9 de Julio",
+    "level": "barrio",
+    "safety_score": 28,
+    "quality_score": 30,
+    "overall_zone_score": 29,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona vulnerable."
+  },
+  {
+    "location_name": "Marcos Paz",
+    "level": "barrio",
+    "safety_score": 40,
+    "quality_score": 45,
+    "overall_zone_score": 42,
+    "source": "snic_observatorio_2024",
+    "notes": "Residencial popular, seguridad media."
+  },
+  {
+    "location_name": "Capital",
+    "level": "departamento",
+    "safety_score": 38,
+    "quality_score": 50,
+    "overall_zone_score": 44,
+    "source": "snic_observatorio_2024",
+    "notes": "Promedio departamental. Mayor densidad delictiva de la provincia."
+  },
+  {
+    "location_name": "San Miguel de Tucumán",
+    "level": "ciudad",
+    "safety_score": 38,
+    "quality_score": 52,
+    "overall_zone_score": 45,
+    "source": "snic_observatorio_2024",
+    "notes": "Capital provincial, alta tasa delictiva pero buena infraestructura."
+  },
+  {
+    "location_name": "Yerba Buena",
+    "level": "departamento",
+    "safety_score": 65,
+    "quality_score": 78,
+    "overall_zone_score": 72,
+    "source": "snic_observatorio_2024",
+    "notes": "Dpto residencial, menor tasa delictiva que Capital."
+  },
+  {
+    "location_name": "Yerba Buena",
+    "level": "ciudad",
+    "safety_score": 65,
+    "quality_score": 78,
+    "overall_zone_score": 72,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad residencial de alto nivel."
+  },
+  {
+    "location_name": "Centro Yerba Buena",
+    "level": "barrio",
+    "safety_score": 60,
+    "quality_score": 75,
+    "overall_zone_score": 68,
+    "source": "snic_observatorio_2024",
+    "notes": "Centro comercial de YB, algo más de delito que resto del dpto."
+  },
+  {
+    "location_name": "Country Jockey Club",
+    "level": "barrio",
+    "safety_score": 80,
+    "quality_score": 85,
+    "overall_zone_score": 82,
+    "source": "snic_observatorio_2024",
+    "notes": "Barrio cerrado, muy baja criminalidad."
+  },
+  {
+    "location_name": "Las Praderas",
+    "level": "barrio",
+    "safety_score": 75,
+    "quality_score": 80,
+    "overall_zone_score": 78,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona residencial alta."
+  },
+  {
+    "location_name": "Tafí Viejo",
+    "level": "departamento",
+    "safety_score": 45,
+    "quality_score": 48,
+    "overall_zone_score": 46,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad periurbana, criminalidad media."
+  },
+  {
+    "location_name": "Tafí Viejo",
+    "level": "ciudad",
+    "safety_score": 45,
+    "quality_score": 48,
+    "overall_zone_score": 46,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad periurbana de Capital."
+  },
+  {
+    "location_name": "Centro Tafí Viejo",
+    "level": "barrio",
+    "safety_score": 42,
+    "quality_score": 50,
+    "overall_zone_score": 46,
+    "source": "snic_observatorio_2024",
+    "notes": "Centro comercial, algo más de delito."
+  },
+  {
+    "location_name": "Villa Mariano Moreno",
+    "level": "barrio",
+    "safety_score": 35,
+    "quality_score": 38,
+    "overall_zone_score": 36,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona popular periférica."
+  },
+  {
+    "location_name": "Cruz Alta",
+    "level": "departamento",
+    "safety_score": 28,
+    "quality_score": 32,
+    "overall_zone_score": 30,
+    "source": "snic_observatorio_2024",
+    "notes": "Segundo dpto más conflictivo después de Capital."
+  },
+  {
+    "location_name": "Banda del Río Salí",
+    "level": "ciudad",
+    "safety_score": 25,
+    "quality_score": 30,
+    "overall_zone_score": 28,
+    "source": "snic_observatorio_2024",
+    "notes": "Alta tasa de delitos violentos."
+  },
+  {
+    "location_name": "Centro Banda",
+    "level": "barrio",
+    "safety_score": 25,
+    "quality_score": 32,
+    "overall_zone_score": 28,
+    "source": "snic_observatorio_2024",
+    "notes": "Centro de Banda, zona conflictiva."
+  },
+  {
+    "location_name": "Alderetes",
+    "level": "ciudad",
+    "safety_score": 22,
+    "quality_score": 25,
+    "overall_zone_score": 24,
+    "source": "snic_observatorio_2024",
+    "notes": "Alta conflictividad, periferia del gran San Miguel."
+  },
+  {
+    "location_name": "Lules",
+    "level": "departamento",
+    "safety_score": 52,
+    "quality_score": 50,
+    "overall_zone_score": 51,
+    "source": "snic_observatorio_2024",
+    "notes": "Periurbano sur, criminalidad media-baja."
+  },
+  {
+    "location_name": "Lules",
+    "level": "ciudad",
+    "safety_score": 52,
+    "quality_score": 50,
+    "overall_zone_score": 51,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad periurbana tranquila."
+  },
+  {
+    "location_name": "San Pablo",
+    "level": "ciudad",
+    "safety_score": 48,
+    "quality_score": 45,
+    "overall_zone_score": 46,
+    "source": "snic_observatorio_2024",
+    "notes": "Localidad rural-periurbana."
+  },
+  {
+    "location_name": "Famaillá",
+    "level": "departamento",
+    "safety_score": 55,
+    "quality_score": 45,
+    "overall_zone_score": 50,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona rural-industrial, criminalidad baja."
+  },
+  {
+    "location_name": "Famaillá",
+    "level": "ciudad",
+    "safety_score": 55,
+    "quality_score": 45,
+    "overall_zone_score": 50,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad agroindustrial."
+  },
+  {
+    "location_name": "Monteros",
+    "level": "departamento",
+    "safety_score": 50,
+    "quality_score": 48,
+    "overall_zone_score": 49,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad media, criminalidad media."
+  },
+  {
+    "location_name": "Monteros",
+    "level": "ciudad",
+    "safety_score": 50,
+    "quality_score": 48,
+    "overall_zone_score": 49,
+    "source": "snic_observatorio_2024",
+    "notes": "Segunda ciudad más grande del interior."
+  },
+  {
+    "location_name": "Concepción",
+    "level": "departamento",
+    "safety_score": 52,
+    "quality_score": 55,
+    "overall_zone_score": 54,
+    "source": "snic_observatorio_2024",
+    "notes": "Centro regional del sur, criminalidad media."
+  },
+  {
+    "location_name": "Concepción",
+    "level": "ciudad",
+    "safety_score": 52,
+    "quality_score": 55,
+    "overall_zone_score": 54,
+    "source": "snic_observatorio_2024",
+    "notes": "Polo comercial y educativo del sur."
+  },
+  {
+    "location_name": "Tafí del Valle",
+    "level": "departamento",
+    "safety_score": 72,
+    "quality_score": 68,
+    "overall_zone_score": 70,
+    "source": "snic_observatorio_2024",
+    "notes": "Zona turística, muy baja criminalidad."
+  },
+  {
+    "location_name": "Tafí del Valle",
+    "level": "ciudad",
+    "safety_score": 72,
+    "quality_score": 68,
+    "overall_zone_score": 70,
+    "source": "snic_observatorio_2024",
+    "notes": "Villa turística serrana."
+  },
+  {
+    "location_name": "Aguilares",
+    "level": "departamento",
+    "safety_score": 48,
+    "quality_score": 42,
+    "overall_zone_score": 45,
+    "source": "snic_observatorio_2024",
+    "notes": "Ciudad media del sur."
+  },
+  {
+    "location_name": "Aguilares",
+    "level": "ciudad",
+    "safety_score": 48,
+    "quality_score": 42,
+    "overall_zone_score": 45,
+    "source": "snic_observatorio_2024",
+    "notes": "Centro agroindustrial."
+  }
+]

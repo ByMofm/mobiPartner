@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: mobipartner-api
+    runtime: docker
+    dockerfilePath: backend/Dockerfile.prod
+    dockerContext: backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: ADMIN_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: SCRAPE_ENABLED
+        value: "false"
+      - key: DEBUG
+        value: "false"
+      - key: USD_ARS_RATE_FALLBACK
+        value: "1300.0"

@@ -1,0 +1,125 @@
+name: Daily Scrape Pipeline
+
+on:
+  schedule:
+    - cron: "0 23 * * *"  # 23:00 UTC = 20:00 Argentina
+  workflow_dispatch:
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  USD_ARS_RATE_FALLBACK: ${{ secrets.USD_ARS_RATE_FALLBACK }}
+
+jobs:
+  scrape-zonaprop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-firefox-${{ runner.os }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          playwright install firefox --with-deps
+
+      - name: Run ZonaProp spider
+        working-directory: backend/scrapers
+        env:
+          PYTHONPATH: /home/runner/work/mobiPartner/mobiPartner/backend
+        run: python -m scrapy crawl zonaprop
+
+  scrape-argenprop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-firefox-${{ runner.os }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          playwright install firefox --with-deps
+
+      - name: Run Argenprop spider
+        working-directory: backend/scrapers
+        env:
+          PYTHONPATH: /home/runner/work/mobiPartner/mobiPartner/backend
+        run: python -m scrapy crawl argenprop
+
+  scrape-mercadolibre:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-firefox-${{ runner.os }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          playwright install firefox --with-deps
+
+      - name: Run MercadoLibre spider
+        working-directory: backend/scrapers
+        env:
+          PYTHONPATH: /home/runner/work/mobiPartner/mobiPartner/backend
+        run: python -m scrapy crawl mercadolibre
+
+  post-process:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [scrape-zonaprop, scrape-argenprop, scrape-mercadolibre]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies (no Playwright)
+        run: |
+          pip install \
+            fastapi==0.115.6 \
+            sqlalchemy==2.0.36 \
+            geoalchemy2==0.15.2 \
+            psycopg2-binary==2.9.10 \
+            pydantic-settings==2.7.1 \
+            httpx==0.28.1 \
+            python-dotenv==1.0.1 \
+            apscheduler==3.11.0 \
+            alembic==1.14.1
+
+      - name: Run post-processing
+        working-directory: backend
+        env:
+          PYTHONPATH: /home/runner/work/mobiPartner/mobiPartner/backend
+        run: python scripts/run_postprocess.py
