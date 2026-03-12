@@ -4,7 +4,7 @@ import { createContext, useMemo, useState, useEffect, ReactNode, useRef } from "
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import createCache, { type EmotionCache } from "@emotion/cache";
-import { CacheProvider, useServerInsertedHTML } from "@emotion/react";
+import { CacheProvider } from "@emotion/react";
 import { lightTheme, darkTheme } from "@/lib/theme";
 
 export const ColorModeContext = createContext({
