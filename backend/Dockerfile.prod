@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev gcc libgeos-dev libproj-dev gdal-bin \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
 # Install only API deps (skip scrapy/playwright which are for scraping)
 RUN pip install --no-cache-dir \
     fastapi==0.115.6 \
