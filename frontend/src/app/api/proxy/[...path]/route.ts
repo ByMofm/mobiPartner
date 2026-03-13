@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000";
 const API_KEY = process.env.API_KEY || "";
+const ADMIN_API_KEY = process.env.ADMIN_API_KEY || "";
 
 async function proxyRequest(
   request: NextRequest,
@@ -16,11 +17,15 @@ async function proxyRequest(
     url.searchParams.append(key, value);
   });
 
+  // Use admin key for /scrape/* routes, regular key for everything else
+  const isAdminRoute = path[0] === "scrape";
+  const key = isAdminRoute ? (ADMIN_API_KEY || API_KEY) : API_KEY;
+
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  if (API_KEY) {
-    headers["X-API-Key"] = API_KEY;
+  if (key) {
+    headers["X-API-Key"] = key;
   }
 
   const init: RequestInit = {
