@@ -72,13 +72,28 @@ class ArgenpropSpider(scrapy.Spider):
             f"Page {response.meta['page']} — {response.url}: {len(links)} listings"
         )
 
+        known_ids = getattr(self, "known_source_ids", set())
+
         for link in links:
+            # Check if we already have this listing
+            id_match = re.search(r"--(\d+)$", link.rstrip("/"))
+            source_id = id_match.group(1) if id_match else None
+            if source_id and source_id in known_ids:
+                continue
+
             yield response.follow(
                 link,
                 meta={
                     "playwright": True,
                     "playwright_page_methods": [
                         PageMethod("wait_for_selector", "h1", timeout=15000),
+                        # Scroll to trigger lazy-load of images
+                        PageMethod("evaluate", "window.scrollBy(0, 300)"),
+                        PageMethod("wait_for_timeout", 600),
+                        PageMethod("evaluate", "window.scrollBy(0, 300)"),
+                        PageMethod("wait_for_timeout", 500),
+                        PageMethod("evaluate", "window.scrollBy(0, 300)"),
+                        PageMethod("wait_for_timeout", 400),
                         PageMethod("evaluate", """() => {
                             try {
                                 const scripts = Array.from(document.querySelectorAll('script'));
@@ -183,18 +198,32 @@ class ArgenpropSpider(scrapy.Spider):
                 except ValueError:
                     pass
 
+        # Images — multiple sources with lazy-load support
         images = response.css(
             "img.gallery__image::attr(src), "
             "img.detail-gallery__image::attr(data-src), "
-            "div.gallery img::attr(src)"
+            "img.detail-gallery__image::attr(src), "
+            "div.gallery img::attr(src), "
+            "div.gallery img::attr(data-src), "
+            "img[data-lazy]::attr(data-lazy)"
         ).getall()
-        item["image_urls"] = [img for img in images if img and "placeholder" not in img]
+        image_list = [img for img in dict.fromkeys(images) if img and "placeholder" not in img]
 
-        item["description"] = " ".join(
-            response.css(
-                "div.section-description p::text, div.property-description p::text"
-            ).getall()
-        ).strip()
+        # Meta tag fallback
+        if not image_list:
+            og_image = response.css('meta[property="og:image"]::attr(content)').get("")
+            if og_image and "placeholder" not in og_image:
+                image_list.append(og_image)
+
+        item["image_urls"] = image_list
+
+        # Description — concatenate all paragraphs
+        desc_texts = response.css(
+            "div.section-description p::text, "
+            "div.property-description p::text, "
+            "div.property-description--content p::text"
+        ).getall()
+        item["description"] = " ".join(t.strip() for t in desc_texts if t.strip()).strip()
 
         # Coordinates — try Playwright evaluate result first, then JSON-LD
         item["latitude"] = None

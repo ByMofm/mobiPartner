@@ -19,7 +19,7 @@ class MercadoLibreSpider(scrapy.Spider):
     allowed_domains = []
 
     BASE_URL = "https://inmuebles.mercadolibre.com.ar"
-    MAX_PAGES = 20
+    MAX_PAGES = 30
 
     SEARCHES = [
         ("departamentos/tucuman-venta", "departamento", "venta"),
@@ -69,18 +69,49 @@ class MercadoLibreSpider(scrapy.Spider):
             f"Page {response.meta['page']} — {response.url}: {len(links)} listings"
         )
 
+        known_ids = getattr(self, "known_source_ids", set())
+
         for link in links:
+            # Check if we already have this listing
+            match = re.search(r"MLA-?(\d+)", link)
+            source_id = f"MLA{match.group(1)}" if match else None
+            if source_id and source_id in known_ids:
+                continue
+
             yield scrapy.Request(
                 link,
                 meta={
                     "playwright": True,
                     "playwright_page_methods": [
                         PageMethod("wait_for_load_state", "networkidle"),
-                        # Scroll down to trigger lazy-loaded images
-                        PageMethod("evaluate", "window.scrollBy(0, 600)"),
-                        PageMethod("wait_for_timeout", 1000),
-                        PageMethod("evaluate", "window.scrollBy(0, 600)"),
+                        # Scroll gallery into view first
+                        PageMethod("evaluate", """() => {
+                            const gallery = document.querySelector('.ui-pdp-gallery');
+                            if (gallery) gallery.scrollIntoView();
+                        }"""),
+                        PageMethod("wait_for_timeout", 800),
+                        # Progressive scrolls to trigger lazy-load
+                        PageMethod("evaluate", "window.scrollBy(0, 400)"),
+                        PageMethod("wait_for_timeout", 600),
+                        PageMethod("evaluate", "window.scrollBy(0, 400)"),
+                        PageMethod("wait_for_timeout", 600),
+                        PageMethod("evaluate", "window.scrollBy(0, 400)"),
+                        PageMethod("wait_for_timeout", 600),
+                        PageMethod("evaluate", "window.scrollBy(0, 400)"),
                         PageMethod("wait_for_timeout", 500),
+                        # Extract coordinates from scripts via JS evaluate
+                        PageMethod("evaluate", """() => {
+                            try {
+                                const scripts = Array.from(document.querySelectorAll('script'));
+                                for (const s of scripts) {
+                                    const t = s.textContent || '';
+                                    const la = t.match(/"latitude"\\s*:\\s*(-?\\d+\\.\\d+)/);
+                                    const ln = t.match(/"longitude"\\s*:\\s*(-?\\d+\\.\\d+)/);
+                                    if (la && ln) return {lat: parseFloat(la[1]), lng: parseFloat(ln[1])};
+                                }
+                            } catch(e) {}
+                            return null;
+                        }"""),
                     ],
                     "property_type": response.meta["property_type"],
                     "listing_type": response.meta["listing_type"],
@@ -139,23 +170,34 @@ class MercadoLibreSpider(scrapy.Spider):
         ]
         item["address"] = ", ".join(dict.fromkeys(location_texts)) if location_texts else ""
 
-        # Coordinates — try JSON-LD first
+        # Coordinates — try Playwright JS evaluate result first
         item["latitude"] = None
         item["longitude"] = None
-        for script in response.css('script[type="application/ld+json"]::text').getall():
-            try:
-                ld = json.loads(script)
-                if isinstance(ld, list):
-                    ld = ld[0]
-                geo = ld.get("geo", {})
-                lat = geo.get("latitude")
-                lng = geo.get("longitude")
+        for pm in response.meta.get("playwright_page_methods", []):
+            if hasattr(pm, "result") and isinstance(pm.result, dict):
+                lat = pm.result.get("lat")
+                lng = pm.result.get("lng")
                 if lat and lng:
                     item["latitude"] = float(lat)
                     item["longitude"] = float(lng)
                     break
-            except Exception:
-                pass
+
+        # Coordinates fallback — JSON-LD
+        if not item["latitude"]:
+            for script in response.css('script[type="application/ld+json"]::text').getall():
+                try:
+                    ld = json.loads(script)
+                    if isinstance(ld, list):
+                        ld = ld[0]
+                    geo = ld.get("geo", {})
+                    lat = geo.get("latitude")
+                    lng = geo.get("longitude")
+                    if lat and lng:
+                        item["latitude"] = float(lat)
+                        item["longitude"] = float(lng)
+                        break
+                except Exception:
+                    pass
 
         # Specs table — th text is in nested div, td text in nested span
         specs = {}
@@ -190,14 +232,15 @@ class MercadoLibreSpider(scrapy.Spider):
             response.css("p.ui-pdp-description__content::text").getall()
         ).strip()
 
-        # Images — try __NEXT_DATA__ JSON first, then data-zoom, then src
+        # Images — multiple strategies with fallbacks
         image_urls = []
 
-        # Strategy 1: Parse __NEXT_DATA__ for image URLs
+        # Strategy 1: Parse __NEXT_DATA__ — search recursively for pictures arrays
         next_data_text = response.css("script#__NEXT_DATA__::text").get("")
         if next_data_text:
             try:
                 next_data = json.loads(next_data_text)
+                # Try known path first
                 pictures = (
                     next_data.get("props", {})
                     .get("pageProps", {})
@@ -206,6 +249,9 @@ class MercadoLibreSpider(scrapy.Spider):
                     .get("gallery", {})
                     .get("pictures", [])
                 )
+                if not pictures:
+                    # Recursive search for any "pictures" key
+                    pictures = self._find_pictures_recursive(next_data)
                 for pic in pictures:
                     url = pic.get("url", "") or pic.get("secure_url", "")
                     if url and not url.startswith("data:"):
@@ -231,6 +277,15 @@ class MercadoLibreSpider(scrapy.Spider):
                 if u and not u.startswith("data:") and "placeholder" not in u
             ]
 
+        # Strategy 4: meta tags fallback (at least 1 image)
+        if not image_urls:
+            og_image = response.css('meta[property="og:image"]::attr(content)').get("")
+            if og_image and not og_image.startswith("data:"):
+                image_urls.append(og_image)
+            twitter_image = response.css('meta[name="twitter:image"]::attr(content)').get("")
+            if twitter_image and not twitter_image.startswith("data:") and twitter_image != og_image:
+                image_urls.append(twitter_image)
+
         item["image_urls"] = list(dict.fromkeys(image_urls))  # deduplicate
 
         all_text = " ".join(specs.keys()) + " " + " ".join(specs.values()) + " " + item.get("description", "") + " " + item.get("title", "")
@@ -239,6 +294,26 @@ class MercadoLibreSpider(scrapy.Spider):
         item["raw_data"] = {"url": response.url, "specs": specs}
 
         yield item
+
+    def _find_pictures_recursive(self, obj, max_depth=8):
+        """Recursively search a JSON object for arrays of picture objects."""
+        if max_depth <= 0:
+            return []
+        if isinstance(obj, dict):
+            for key, val in obj.items():
+                if key == "pictures" and isinstance(val, list) and val:
+                    # Check if items look like picture objects (have url field)
+                    if isinstance(val[0], dict) and ("url" in val[0] or "secure_url" in val[0]):
+                        return val
+                result = self._find_pictures_recursive(val, max_depth - 1)
+                if result:
+                    return result
+        elif isinstance(obj, list):
+            for item in obj:
+                result = self._find_pictures_recursive(item, max_depth - 1)
+                if result:
+                    return result
+        return []
 
     def _parse_price(self, fraction: str, symbol: str) -> tuple:
         if not fraction:

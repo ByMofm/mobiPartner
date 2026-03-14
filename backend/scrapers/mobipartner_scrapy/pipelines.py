@@ -45,6 +45,16 @@ class PropertyPipeline:
         logger.info(f"USD/ARS blue rate: {self.usd_ars_rate}")
 
         source = SourceType(spider.name)
+
+        # Cache known source_ids so spiders can skip detail pages for existing listings
+        known_ids = set(
+            row[0] for row in self.session.query(PropertyListing.source_id)
+            .filter(PropertyListing.source == source)
+            .all()
+        )
+        spider.known_source_ids = known_ids
+        logger.info(f"Loaded {len(known_ids)} known source_ids for {spider.name}")
+
         self.scrape_run = ScrapeRun(source=source, started_at=datetime.utcnow())
         self.session.add(self.scrape_run)
         self.session.commit()
